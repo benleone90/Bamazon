@@ -40,16 +40,35 @@ function customerInput() {
         case "Place an order":
           placeOrder();
           break;
-        // case "Back to main menu":
-        //   var greeting = require("./bamazonCustomer.js");
-        //   greeting();
-        //   break;
         case "Exit":
           console.log("Thanks for shopping! Goodbye!");
           connection.end();
           break;
       }
     });
+}
+
+function queryDB(search) {
+  connection.query(
+    "SELECT item_id, product_name, department_name, price, stock_quantity FROM products ORDER BY " +
+      search,
+    function(err, results) {
+      if (err) throw err;
+      console.log(
+        table.print(results, {
+          item_id: { name: "Product ID" },
+          product_name: { name: "Product Name" },
+          department_name: { name: "Department Name" },
+          price: { name: "Price ($)", printer: table.number(2) },
+          stock_quantity: {
+            name: "Stock Quantity",
+            printer: table.number()
+          }
+        })
+      );
+      customerInput();
+    }
+  );
 }
 
 function viewInventory() {
@@ -63,67 +82,13 @@ function viewInventory() {
     .then(function(response) {
       switch (response.action) {
         case "Department":
-          connection.query(
-            "SELECT item_id, product_name, department_name, price, stock_quantity FROM products ORDER BY department_name",
-            function(err, results) {
-              if (err) throw err;
-              console.log(
-                table.print(results, {
-                  item_id: { name: "Product ID" },
-                  product_name: { name: "Product Name" },
-                  department_name: { name: "Department Name" },
-                  price: { name: "Price ($)", printer: table.number(2) },
-                  stock_quantity: {
-                    name: "Stock Quantity",
-                    printer: table.number()
-                  }
-                })
-              );
-              customerInput();
-            }
-          );
+          queryDB("department_name");
           break;
         case "Price (low to high)":
-          connection.query(
-            "SELECT item_id, product_name, department_name, price, stock_quantity FROM products ORDER BY price",
-            function(err, results) {
-              if (err) throw err;
-              console.log(
-                table.print(results, {
-                  item_id: { name: "Product ID" },
-                  product_name: { name: "Product Name" },
-                  department_name: { name: "Department Name" },
-                  price: { name: "Price ($)", printer: table.number(2) },
-                  stock_quantity: {
-                    name: "Stock Quantity",
-                    printer: table.number()
-                  }
-                })
-              );
-              customerInput();
-            }
-          );
+          queryDB("price");
           break;
         case "Price (high to low)":
-          connection.query(
-            "SELECT item_id, product_name, department_name, price, stock_quantity FROM products ORDER BY price DESC",
-            function(err, results) {
-              if (err) throw err;
-              console.log(
-                table.print(results, {
-                  item_id: { name: "Product ID" },
-                  product_name: { name: "Product Name" },
-                  department_name: { name: "Department Name" },
-                  price: { name: "Price ($)", printer: table.number(2) },
-                  stock_quantity: {
-                    name: "Stock Quantity",
-                    printer: table.number()
-                  }
-                })
-              );
-              customerInput();
-            }
-          );
+          queryDB("price DESC");
           break;
       }
     });
@@ -160,7 +125,6 @@ function placeOrder() {
               })
               .then(function(response2) {
                 var quantity = response2.quantity;
-                // console.log(results[0].stock_quantity);
                 if (
                   quantity > results[0].stock_quantity &&
                   results[0].stock_quantity > 0
