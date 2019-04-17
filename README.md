@@ -15,4 +15,4 @@ This is a Command-Line Interface marketplace called Bamazon. This app allows you
 5. Once you have a working database and a password is entered in the code, you can now run the CLI marketplace.
 6. From the terminal, run `node bamazonCustomer.js` or `node bamazonManager.js` to use the app as a customer or manager.
 
-## [Link to Video]()
+## [Link to Video](https://drive.google.com/file/d/1ZRTbrMmC57V8uChzQ0rSA3zc3dPCyE_0/view)
