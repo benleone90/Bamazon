@@ -7,7 +7,7 @@ var connection = mysql.createConnection({
   host: "localhost",
   port: 3306,
   user: "root",
-  password: "G4qtyx7v1!",
+  password: "",
   database: "bamazon"
 });
 
@@ -25,12 +25,7 @@ function customerInput() {
       name: "action",
       type: "list",
       message: "\nWhat would you like to do?\n",
-      choices: [
-        "View available inventory",
-        "Place an order",
-        // "Back to main menu",
-        "Exit"
-      ]
+      choices: ["View available inventory", "Place an order", "Exit"]
     })
     .then(function(response) {
       switch (response.action) {
